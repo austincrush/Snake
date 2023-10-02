@@ -14,15 +14,6 @@ import java.util.Scanner;
 
 public class Game extends JPanel implements ActionListener, KeyListener {
 
-    private class Tile {
-        int x;
-        int y;
-
-        Tile(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
 
     private final int frameWidth = 500;
     private final int frameHeight = 600;
@@ -37,7 +28,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     private Timer timer;
     private Label highScore;
     private Label score;
-    private JButton replay;
     private int xVelocity;
     private int yVelocity;
     private int currentScore;
@@ -45,7 +35,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     private boolean gameOver = false;
     private Scanner scanner;
 
-    public Game() throws FileNotFoundException {
+    public Game() {
 
         JFrame frame = new JFrame("SNAKE");
         frame.setVisible(true);
@@ -53,7 +43,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(this);
 
         setPreferredSize(new Dimension(frameWidth, frameHeight));
         setBackground(Color.decode("#303030"));
@@ -76,7 +65,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         this.add(highScore);
         highScore.setText("High Score: " + readHighScore());
         highScore.setLocation(50, 525);
-        highScore.setSize(200, 50);
+        highScore.setSize(150, 50);
         highScore.setFont(new Font("SansSerif", Font.BOLD , 20));
 
         score = new Label();
@@ -85,6 +74,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         score.setLocation(350, 525);
         score.setSize(200, 50);
         score.setFont(new Font("SansSerif", Font.BOLD, 20));
+
+        frame.add(this);
 
         timer = new Timer(100, this);
         timer.start();
@@ -97,8 +88,23 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     }
 
     public void generateFruit() {
-        fruit.x = random.nextInt(gameBoardWidth / tileSize);
-        fruit.y = random.nextInt(gameBoardHeight / tileSize);
+        boolean open = false;
+        while (!open) {
+            open = true;
+            int randomX = random.nextInt(gameBoardWidth / tileSize);
+            int randomY = random.nextInt(gameBoardHeight / tileSize);
+            for (int i = 0; i < snakeBody.size(); i++) {
+                if (randomX == snakeBody.get(i).x && randomY == snakeBody.get(i).y) {
+                    open = false;
+                    break;
+                }
+            }
+            if (open) {
+                fruit.x = randomX;
+                fruit.y = randomY;
+            }
+        }
+
     }
 
     public void draw(Graphics g) {
@@ -171,7 +177,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         repaint();
         if(gameOver) {
             timer.stop();
-            endGame();
             updateHighScore();
         }
     }
@@ -196,14 +201,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             yVelocity = 0;
         }
     }
-
-    public void endGame() {
-
-    }
-
-//    public void replay() throws FileNotFoundException {
-//        Game game = new Game();
-//    }
 
     public void updateHighScore() {
         if(currentScore > currentHighScore) {
