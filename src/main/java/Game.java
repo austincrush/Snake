@@ -49,6 +49,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         addKeyListener(this);
         setFocusable(true);
         setLayout(null);
+        frame.add(this);
 
         snakeHead = new Tile(2, 10);
         snakeBody = new ArrayList<>();
@@ -75,7 +76,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         score.setSize(200, 50);
         score.setFont(new Font("SansSerif", Font.BOLD, 20));
 
-        frame.add(this);
+        //frame.add(this);
 
         timer = new Timer(100, this);
         timer.start();
@@ -184,19 +185,19 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if(key == KeyEvent.VK_UP && yVelocity != 1) {
+        if(key == KeyEvent.VK_W && yVelocity != 1) {
             xVelocity = 0;
             yVelocity = -1;
         }
-        else if(key == KeyEvent.VK_DOWN && yVelocity != -1) {
+        else if(key == KeyEvent.VK_S && yVelocity != -1) {
             xVelocity = 0;
             yVelocity = 1;
         }
-        else if(key == KeyEvent.VK_RIGHT && xVelocity != -1) {
+        else if(key == KeyEvent.VK_D && xVelocity != -1) {
             xVelocity = 1;
             yVelocity = 0;
         }
-        else if(key == KeyEvent.VK_LEFT && xVelocity != 1) {
+        else if(key == KeyEvent.VK_A && xVelocity != 1) {
             xVelocity = -1;
             yVelocity = 0;
         }
